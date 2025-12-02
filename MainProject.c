@@ -220,7 +220,7 @@ int main(){
 	} while (comfirm != 'N' && comfirm != 'n' && comfirm != 'Y' && comfirm != 'y');
 	} while (comfirm == 'Y' || comfirm == 'y');
 }
-void addProduct(Product ds[], int *n){ // case 1
+void addProduct(Product ds[], int *n){ 
 	int addCount;
 	char strNumber[10];
 
@@ -251,6 +251,7 @@ void addProduct(Product ds[], int *n){ // case 1
             ds[*n].productId[strcspn(ds[*n].productId, "\n")] = '\0';
             if(strspn(ds[*n].productId, " \t") == strlen(ds[*n].productId)){
             	printf("\nMang rong vui long nhap lai!\n");
+            	continue;
             }
             if (duplicateProduct(ds, *n, ds[*n].productId)){
             	printf("\nMa da bi trung hay nhap lai!\n");
@@ -264,6 +265,7 @@ void addProduct(Product ds[], int *n){ // case 1
             ds[*n].name[strcspn(ds[*n].name, "\n")] = '\0';
             if(strspn(ds[*n].name, " \t") == strlen(ds[*n].name)){
             	printf("\nMang rong vui long nhap lai!\n");
+            	continue;
 			}
             if (duplicateProduct(ds, *n, ds[*n].name)){
             	printf("\nTen da bi trung hay nhap lai!\n");
@@ -341,7 +343,7 @@ void displayProduct(Product ds[], int n){
     }
     printf("+----------+-----------------------+----------------+-----------------+----------------+\n");
 }
-void updateProduct(Product ds[], int n){ // case 2
+void updateProduct(Product ds[], int n){ 
 	char findId[10];
 	int found = 0;
 	char strNumber[10];
@@ -364,8 +366,13 @@ void updateProduct(Product ds[], int n){ // case 2
                 ds[i].name[strcspn(ds[i].name, "\n")] = '\0';
                 if(strspn(ds[i].name, " \t") == strlen(ds[i].name)){
             	    printf("\nMang rong vui long nhap lai!\n");
+            	    continue;
 				}
-			} while(strspn(ds[i].name, " \t") == strlen(ds[i].name));
+	            if (duplicateProduct(ds, n, ds[i].name)){
+	            	printf("\nTen da bi trung hay nhap lai!\n");
+	            	continue;
+				}
+			} while(strspn(ds[i].name, " \t") == strlen(ds[i].name) || duplicateProduct(ds, n, ds[i].name));
 
 			do {
 				printf("Don vi hang hoa moi (Cai/KG/Hop): ");
@@ -413,7 +420,7 @@ void updateProduct(Product ds[], int n){ // case 2
 		printf("\nKhong tim thay san pham!\n");
 	}
 }
-void searchProduct(Product ds[], int n){ // case 4
+void searchProduct(Product ds[], int n){ 
 	int found = 0;
 	char search[50];
 
@@ -448,7 +455,7 @@ void searchProduct(Product ds[], int n){ // case 4
 		printf("\nKhong tim thay ten hoac ma hang!\n");
 	}
 }
-void namesortProduct(Product ds[], int n){ // case 6 choose a
+void namesortProduct(Product ds[], int n){ 
 	Product temp;
 	for (int i = 0; i < n - 1; i++) {
 		for (int j = 0; j < n - i - 1; j++) {
@@ -461,7 +468,7 @@ void namesortProduct(Product ds[], int n){ // case 6 choose a
 	}
     printf("\nDa sap xep danh sach theo ten!\n");
 }
-void qtysortProduct(Product ds[], int n){ // case 6 choose b
+void qtysortProduct(Product ds[], int n){ 
 	Product temp;
 	for (int i = 0; i < n - 1; i++) {
 		for (int j = 0; j < n - i - 1; j++) {
@@ -474,7 +481,7 @@ void qtysortProduct(Product ds[], int n){ // case 6 choose b
 	}
     printf("\nDa sap xep danh sach theo so luong!\n");
 }
-void paginationProduct(Product ds[], int n){ //case 5
+void paginationProduct(Product ds[], int n){ 
 	int totalPages = n / itemsPerPage + ((n % itemsPerPage == 0) ? 0 : 1);
 	char choose;
 	while (1){
@@ -518,7 +525,7 @@ void paginationProduct(Product ds[], int n){ //case 5
         }
 	}
 }
-void deleteProduct(Product ds[], int *n){ // case b trong case 3
+void deleteProduct(Product ds[], int *n){ 
 	char findId[10];
 	int flag = 0;
 	
@@ -546,7 +553,7 @@ void deleteProduct(Product ds[], int *n){ // case b trong case 3
 		printf("\nKhong tim thay ma hang.\n");
 	}
 }
-void lockedProduct(Product ds[], int n){ // case a trong case 3
+void lockedProduct(Product ds[], int n){ 
 	char findId[10];
 	int flag = 0;
 	
@@ -576,7 +583,7 @@ void lockedProduct(Product ds[], int n){ // case a trong case 3
 		printf("\nKhong tim thay ma hang.\n");
 	}
 }
-void importProduct(Product ds[], int n, Transaction logs[], int *logCount) { // case 7
+void importProduct(Product ds[], int n, Transaction logs[], int *logCount) { 
     char findId[10];
     int amount;
     int flag = 0;
@@ -669,7 +676,7 @@ void importProduct(Product ds[], int n, Transaction logs[], int *logCount) { // 
         printf("\nKhong tim thay ma hang.\n");
     }
 }
-int confirmDateOrder(int day, int month, int year){ // dieu kien ngay thang nam
+int confirmDateOrder(int day, int month, int year){ 
     int success = 1;
     if(month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12){
         if(day < 1 || day > 31){
@@ -698,7 +705,7 @@ int confirmDateOrder(int day, int month, int year){ // dieu kien ngay thang nam
     }
 	return success;
 }
-void showHistory(Product ds[], Transaction logs[], int logCount){ //case 8 hien thi lich su
+void showHistory(Product ds[], Transaction logs[], int logCount){ 
     int found = 0;
     char search[50];
 
