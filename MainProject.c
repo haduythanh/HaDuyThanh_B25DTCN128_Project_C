@@ -42,6 +42,7 @@ Transaction listTransaction[50];
 void addProduct(Product ds[], int *n);
 void displayProduct(Product ds[], int n);
 int duplicateProduct(Product ds[], int n, char duplicate[]);
+int duplicateProductName(Product ds[], int n, char name[], int currentIndex);
 void updateProduct(Product ds[], int n);
 void searchProduct(Product ds[], int n);
 void namesortProduct(Product ds[], int n);
@@ -236,7 +237,7 @@ void addProduct(Product ds[], int *n){
 				printf("\nPhai nhap so duong!\n");
 			}			
 			if(addCount == 0){
-				printf("\nPhai nhap vao la so!\n");			
+				printf("\nPhai nhap vao la so!\n");		
 			}
 			if(addCount > 0){
 				break;
@@ -252,7 +253,7 @@ void addProduct(Product ds[], int *n){
             if(strspn(ds[*n].productId, " \t") == strlen(ds[*n].productId)){
             	printf("\nMang rong vui long nhap lai!\n");
             	continue;
-            }
+            } 
             if (duplicateProduct(ds, *n, ds[*n].productId)){
             	printf("\nMa da bi trung hay nhap lai!\n");
             	continue;
@@ -325,12 +326,24 @@ void addProduct(Product ds[], int *n){
 int duplicateProduct(Product ds[], int n, char duplicate[]){
 	for(int i = 0; i < n; i++){
 		if(strcmp(ds[i].productId, duplicate)== 0 || 
-		   strcmp(ds[i].name, duplicate)== 0){
+	        strcmp(ds[i].name, duplicate)== 0){
 			return 1;
 		}
 	}
 	return 0;
 }
+int duplicateProductName(Product ds[], int n, char name[], int currentIndex){
+    for(int i = 0; i < n; i++){
+        if(i == currentIndex) {
+			continue;  
+		}
+        if(strcmp(ds[i].name, name) == 0){
+            return 1;
+        }
+    }
+    return 0;
+}
+
 void displayProduct(Product ds[], int n){
     printf("\n+----------+-----------------------+----------------+-----------------+----------------+\n");
     printf("|%-9s |%-22s |%-15s |%-16s |%-15s |\n", "Ma Hang", "Ten Hang Hoa", "Don Vi Hang Hoa", "So Luong Ton Kho", "Trang Thai");
@@ -368,12 +381,11 @@ void updateProduct(Product ds[], int n){
             	    printf("\nMang rong vui long nhap lai!\n");
             	    continue;
 				}
-	            if (duplicateProduct(ds, n, ds[i].name)){
+	            if (duplicateProductName(ds, n, ds[i].name, i)){
 	            	printf("\nTen da bi trung hay nhap lai!\n");
 	            	continue;
 				}
-			} while(strspn(ds[i].name, " \t") == strlen(ds[i].name) || duplicateProduct(ds, n, ds[i].name));
-
+			} while(strspn(ds[i].name, " \t") == strlen(ds[i].name) || duplicateProductName(ds, n, ds[i].name, i));
 			do {
 				printf("Don vi hang hoa moi (Cai/KG/Hop): ");
 				fgets(ds[i].unit, 10, stdin);
@@ -483,11 +495,11 @@ void qtysortProduct(Product ds[], int n){
 }
 void paginationProduct(Product ds[], int n){ 
 	int totalPages = n / itemsPerPage + ((n % itemsPerPage == 0) ? 0 : 1);
-	char choose;
+	char choose = 'K';
 	while (1){
 		system("cls");
         int start = (page - 1) * itemsPerPage;
-        int end   = page * itemsPerPage;
+        int end = page * itemsPerPage;
 		printf("\n+--------------------------------------------------------------------------------------+\n");
 		printf("|                                 DANH SACH PHAN TRANG                                 |\n");
 		printf("+----------+-----------------------+----------------+-----------------+----------------+\n");
@@ -505,7 +517,8 @@ void paginationProduct(Product ds[], int n){
 
         fflush(stdin);
         printf("\nBan co muon chuyen trang khong (C/K)? ");
-        choose = getchar();
+		scanf(" %c", &choose);
+
         if(choose == 'k' || choose == 'K') {
 			return;
 		}
@@ -519,9 +532,12 @@ void paginationProduct(Product ds[], int n){
 				}
             } while(newPage < 1 || newPage > totalPages);
             page = newPage;
-            getchar();
+            fflush(stdin);
         } else {
-            printf("Lua chon khong hop le!\n");
+			getchar();
+            printf("\nLua chon khong hop le!\n");
+		    printf("\nNhan Enter de tiep tuc...");
+			getchar();
         }
 	}
 }
@@ -588,7 +604,7 @@ void importProduct(Product ds[], int n, Transaction logs[], int *logCount) {
     int amount;
     int flag = 0;
 	char strNumber[10];
-
+	
 	fflush(stdin);
     do {
         printf("Nhap ma san pham: ");
@@ -612,7 +628,7 @@ void importProduct(Product ds[], int n, Transaction logs[], int *logCount) {
 					continue;
                 }
                 if(strcmp(logs[*logCount].type, "IN") != 0 && 
-				        strcmp(logs[*logCount].type, "OUT") != 0){
+				    strcmp(logs[*logCount].type, "OUT") != 0){
                     printf("\nChi duoc nhap IN hoac OUT!\n");
 					continue;
 				}
